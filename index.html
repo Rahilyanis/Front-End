@@ -1,0 +1,518 @@
+﻿<!DOCTYPE html>
+<html ng-app="ionicApp">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+  <title>RESUME AND WORK</title>
+
+  <link href="http://code.ionicframework.com/nightly/css/ionic.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+
+  <script src="http://code.ionicframework.com/nightly/js/ionic.bundle.min.js"></script>
+  <script src="jquery-1.9.1.js" language="text/javascript" type="text/javascript"></script>
+  <script src="script.js"></script>
+
+<script>
+function PostCv() {
+var postURL="http://resumebackend-rahil.rhcloud.com/SpringMVCXML/rest/cv/addCv";
+var data="<cv>";
+data=data+"<nom>"+document.getElementById('nom').value+"</nom>";
+data=data+"<prenom>"+document.getElementById('prenom').value+"</prenom>";
+data=data+"<objectif>"+document.getElementById('objectif').value+"</objectif>";
+//Scolarité
+if(document.getElementById('ScolT1').value!='')data=data+"<scolarite>"+"<titre>"+document.getElementById('ScolT1').value+"</titre>"+"<description>"+document.getElementById('ScolD1').value+"</description>"+"</scolarite>";
+if(document.getElementById('ScolT2').value!='')data=data+"<scolarite>"+"<titre>"+document.getElementById('ScolT2').value+"</titre>"+"<description>"+document.getElementById('ScolD2').value+"</description>"+"</scolarite>";
+if(document.getElementById('ScolT3').value!='')data=data+"<scolarite>"+"<titre>"+document.getElementById('ScolT3').value+"</titre>"+"<description>"+document.getElementById('ScolD3').value+"</description>"+"</scolarite>";
+//Experience Pro
+if(document.getElementById('ExpT1').value!='')data=data+"<experience_profesionelle>"+"<titre>"+document.getElementById('ExpT1').value+"</titre>"+"<description>"+document.getElementById('ExpD1').value+"</description>"+"</experience_profesionelle>";
+if(document.getElementById('ExpT2').value!='')data=data+"<experience_profesionelle>"+"<titre>"+document.getElementById('ExpT2').value+"</titre>"+"<description>"+document.getElementById('ExpD2').value+"</description>"+"</experience_profesionelle>";
+if(document.getElementById('ExpT3').value!='')data=data+"<experience_profesionelle>"+"<titre>"+document.getElementById('ExpT3').value+"</titre>"+"<description>"+document.getElementById('ExpD3').value+"</description>"+"</experience_profesionelle>";
+//Langues
+if(document.getElementById('LanT1').value!='')data=data+"<langues>"+"<titre>"+document.getElementById('LanT1').value+"</titre>"+"<niveau>"+document.getElementById('LanN1').value.toString()+"</niveau>"+"</langues>";
+if(document.getElementById('LanT2').value!='')data=data+"<langues>"+"<titre>"+document.getElementById('LanT2').value+"</titre>"+"<niveau>"+document.getElementById('LanN2').value.toString()+"</niveau>"+"</langues>";
+if(document.getElementById('LanT3').value!='')data=data+"<langues>"+"<titre>"+document.getElementById('LanT3').value+"</titre>"+"<niveau>"+document.getElementById('LanN3').value.toString()+"</niveau>"+"</langues>";
+if(document.getElementById('LanT4').value!='')data=data+"<langues>"+"<titre>"+document.getElementById('LanT4').value+"</titre>"+"<niveau>"+document.getElementById('LanN4').value.toString()+"</niveau>"+"</langues>";
+if(document.getElementById('LanT5').value!='')data=data+"<langues>"+"<titre>"+document.getElementById('LanT5').value+"</titre>"+"<niveau>"+document.getElementById('LanN5').value.toString()+"</niveau>"+"</langues>";
+//Competences Info
+if(document.getElementById('ComT1').value!='')data=data+"<competences_informatique>"+"<type>"+document.getElementById('ComT1').value+"</type>"+"<niveau>"+document.getElementById('ComN1').value.toString()+"</niveau>"+"</competences_informatique>";
+if(document.getElementById('ComT2').value!='')data=data+"<competences_informatique>"+"<type>"+document.getElementById('ComT2').value+"</type>"+"<niveau>"+document.getElementById('ComN2').value.toString()+"</niveau>"+"</competences_informatique>";
+if(document.getElementById('ComT3').value!='')data=data+"<competences_informatique>"+"<type>"+document.getElementById('ComT3').value+"</type>"+"<niveau>"+document.getElementById('ComN3').value.toString()+"</niveau>"+"</competences_informatique>";
+if(document.getElementById('ComT4').value!='')data=data+"<competences_informatique>"+"<type>"+document.getElementById('ComT4').value+"</type>"+"<niveau>"+document.getElementById('ComN4').value.toString()+"</niveau>"+"</competences_informatique>";
+if(document.getElementById('ComT5').value!='')data=data+"<competences_informatique>"+"<type>"+document.getElementById('ComT5').value+"</type>"+"<niveau>"+document.getElementById('ComN5').value.toString()+"</niveau>"+"</competences_informatique>";
+data=data+"</cv>";
+
+
+$.ajax({
+    contentType: "application/xml; charset=UTF-8",
+    type: "POST",
+    url: postURL,
+    dataType: "xml",
+	crossDomain : true,
+	data:data,
+	    success: function (res) {
+        alert("CV bien ajouté");
+    },
+    error: function (res) {
+        alert("Une ERREUR est survenue" + res.statusText);
+    }
+});
+	
+}
+</script>
+
+<script>
+function GetAllCvs() {
+var rootURL = "http://resumebackend-rahil.rhcloud.com/SpringMVCXML/rest/cv";
+ var xhr; 
+    try {  xhr = new ActiveXObject('Msxml2.XMLHTTP');   }
+    catch (e) 
+    {
+        try {   xhr = new ActiveXObject('Microsoft.XMLHTTP'); }
+        catch (e2) 
+        {
+           try {  xhr = new XMLHttpRequest();  }
+           catch (e3) {  xhr = false;   }
+         }
+    }
+  
+    xhr.onreadystatechange  = function() 
+    { 
+       if(xhr.readyState  == 4)
+       {
+        if(xhr.status  == 200) 
+{
+//  Assigner le fichier XML à une variable
+ doc = xhr.responseXML; 
+//  Lire le premier élément avec DOM
+ arbre = doc.getElementsByTagName('cvs');
+  root = arbre.item(1).childNodes;
+  j=0;
+ var contain =document.getElementById('container');
+ contain.innerHTML = '';
+ while( root[j]!=null)
+{elementcv=root[j];
+ var idcv=elementcv.getElementsByTagName('key').item(0).textContent;
+ contenuecv=elementcv.getElementsByTagName('value');
+ var nom=contenuecv.item(0).getElementsByTagName('nom').item(0).textContent;
+ var prenom=contenuecv.item(0).getElementsByTagName('prenom').item(0).textContent;
+ var objectif=contenuecv.item(0).getElementsByTagName('objectif').item(0).textContent;
+ var div = document.createElement('div');
+div.id ="CV";
+div.innerHTML = '<div class="card">'+
+  '<div class="list">'+
+  '<div class="item item-divider item-icon-left item-icon-right" style="background-color:rgba(17, 179, 243, 0.84);text-align: center;">'
+   +'<h2 class="title" style="color:wheat">RESUME'+ idcv+'</h2>'+'</div>';
+ div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Informations Personnelles'+ '</div>'+'<a class="item item-icon-left" href="#">'+'<i class="icon ion-person"></i>'+'Nom : '+nom+'</a>';
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href="#">'+'<i class="icon ion-person"></i>'+'Prenom : '+prenom+'</a>';
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left item-icon-right" href="#">'+'<i class="icon ion-person"></i>'+'Objectif : '+objectif+' <i class="icon ion-ribbon-b"></i>'+'</a>';
+ var scolarite=contenuecv.item(0).getElementsByTagName('scolarite');
+div.innerHTML =div.innerHTML+'<div class="item item-divider">Scolarité</div>'; 
+ // item variant selon le nombre d'ecole frequenté et pour les childnodes 0 titre de la formation  1 vaut le nom de l'école
+  i=0;
+ while(scolarite.item(i)!=null)
+{var titre=scolarite.item(i).childNodes[0].textContent;
+ var description=scolarite.item(i).childNodes[1].textContent;
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+titre+'<p> Description :'+description+'</p></a>';
+i++;
+}
+div.innerHTML =div.innerHTML+'<div class="item item-divider">Langues</div>'; 
+//langues
+ var langues=contenuecv.item(0).getElementsByTagName('langues');
+ i=0;
+while(langues.item(i)!=null)
+{var titre=langues.item(i).childNodes[1].textContent;
+ var niveau=langues.item(i).childNodes[0].textContent;
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+titre+'<p> Description :'+niveau+'</p></a>';
+i++;
+}
+div.innerHTML =div.innerHTML+'<div class="item item-divider">Experience Professionelle </div>'
+//Experience Pro
+ var Experiencepro=contenuecv.item(0).getElementsByTagName('experience_profesionelle');
+ i=0;
+while(Experiencepro.item(i)!=null)
+{var titre=Experiencepro.item(i).childNodes[1].textContent;
+ var description=Experiencepro.item(i).childNodes[0].textContent;
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+titre+'<p> Description :'+description+'</p></a>';
+
+i++;
+}
+div.innerHTML =div.innerHTML+'<div class="item item-divider">Competences Informatiques</div>'; 
+//Competences Informatique 
+ var Comptences=contenuecv.item(0).getElementsByTagName('competences_informatique');
+ i=0;
+while(Comptences.item(i)!=null)
+{var type=Comptences.item(i).childNodes[1].textContent;
+ var niveau=Comptences.item(i).childNodes[0].textContent;
+
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Type :'+type+'<p> Niveau :'+niveau+'</p></a>';
+ 
+i++;
+}
+  div.innerHTML=div.innerHTML+'</div>'+'</div>';
+
+j++;
+
+document.getElementById('container').appendChild(div);
+}
+}
+        else
+alert("sa ne marche pas");
+        }
+    }; 
+	xhr.open( "GET", rootURL ,  true); 
+   xhr.send(null); 
+	
+}
+</script>
+<script>
+function Getcv(id) {
+var rootURL = "http://resumebackend-rahil.rhcloud.com/SpringMVCXML/rest/cv/"+id;
+ var xhr; 
+    try {  xhr = new ActiveXObject('Msxml2.XMLHTTP');   }
+    catch (e) 
+    {
+        try {   xhr = new ActiveXObject('Microsoft.XMLHTTP'); }
+        catch (e2) 
+        {
+           try {  xhr = new XMLHttpRequest();  }
+           catch (e3) {  xhr = false;   }
+         }
+    }
+  
+    xhr.onreadystatechange  = function() 
+    { 
+       if(xhr.readyState  == 4)
+       {
+        if(xhr.status  == 200) 
+{
+//  Assigner le fichier XML à une variable
+ doc = xhr.responseXML; 
+//  Lire le premier élément avec DOM
+ arbre = doc.getElementsByTagName('cv');
+  contenuecv = arbre.item(0);
+   i=0;
+    var contain =document.getElementById('container');
+ contain.innerHTML = '';
+ var div = document.createElement('div');
+div.id ="CV";   
+  div.innerHTML = '<div class="card">'+
+  '<div class="list">'+
+  '<div class="item item-divider item-icon-left item-icon-right" style="background-color:rgba(17, 179, 243, 0.84);text-align: center;">'
+   +'<h2 class="title" style="color:wheat">RESUME'+'</h2>'+'</div>';
+   var scolarite="";
+   var langues="";
+   var exppro="";
+   var compinfo="";
+  while(contenuecv.childNodes[i]!=null)
+  {
+  if(contenuecv.childNodes[i].nodeName=='competences_informatique')compinfo=compinfo+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Type :'+contenuecv.childNodes[i].childNodes[1].textContent+'<p> Niveau :'+contenuecv.childNodes[i].childNodes[0].textContent+'</p></a>';
+  if(contenuecv.childNodes[i].nodeName=='experience_profesionelle')exppro=exppro+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+contenuecv.childNodes[i].childNodes[1].textContent+'<p> Description :'+contenuecv.childNodes[i].childNodes[0].textContent+'</p></a>';
+  if(contenuecv.childNodes[i].nodeName=='langues')langues=langues+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+contenuecv.childNodes[i].childNodes[1].textContent+'<p> Niveau :'+contenuecv.childNodes[i].childNodes[0].textContent+'</p></a>';
+  if(contenuecv.childNodes[i].nodeName=='nom')var nom=contenuecv.childNodes[i].textContent;
+  if(contenuecv.childNodes[i].nodeName=='prenom')var prenom=contenuecv.childNodes[i].textContent;
+  if(contenuecv.childNodes[i].nodeName=='objectif')var objectif=contenuecv.childNodes[i].textContent;
+  if(contenuecv.childNodes[i].nodeName=='scolarite')scolarite=scolarite+'<a class="item item-icon-left" href=""><i class="icon ion-university"></i> Titre :'+contenuecv.childNodes[i].childNodes[0].textContent+'<p> Description :'+contenuecv.childNodes[i].childNodes[1].textContent+'</p></a>';
+  i++;
+  }
+div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Informations Personnelles'+ '</div>'+'<a class="item item-icon-left" href="#">'+'<i class="icon ion-person"></i>'+'Nom : '+nom+'</a>';
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left" href="#">'+'<i class="icon ion-person"></i>'+'Prenom : '+prenom+'</a>';
+div.innerHTML =div.innerHTML+'<a class="item item-icon-left item-icon-right" href="#">'+'<i class="icon ion-person"></i>'+'Objectif : '+objectif+' <i class="icon ion-ribbon-b"></i>'+'</a>';
+div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Scolarité'+ '</div>'+scolarite;
+div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Langues'+ '</div>'+langues;
+div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Experiences Profesionnelles'+ '</div>'+exppro;
+div.innerHTML =div.innerHTML+'<div class="item item-divider">'+'Compétences Informatiques'+ '</div>'+compinfo;
+div.innerHTML=div.innerHTML+'</div>'+'</div>';
+document.getElementById('container').appendChild(div);
+
+}
+        else
+alert("sa ne marche pas");
+        }
+    }; 
+	xhr.open( "GET", rootURL ,  true); 
+   xhr.send(null); 
+	
+}
+</script>
+
+</head>
+
+<body>
+
+  <ion-nav-bar class="bar bar-header bar-calm">
+    <ion-nav-back-button class="button-icon ion-arrow-left-c">
+    </ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-view animation="slide-left-right"></ion-nav-view>
+
+  <script id="tabs.html" type="text/ng-template">
+    <ion-tabs class="tabs-icon-top tabs-calm">
+
+     <ion-tab title="ALL RESUMES" icon="ion-ios-list-outline" href="#/tab/home">
+        <ion-nav-view name="home-tab"></ion-nav-view>
+      </ion-tab>
+
+
+      <ion-tab title="ADD RESUME" icon="ion-compose" ui-sref="tabs.addresume">
+        <ion-nav-view name="addresume-tab"></ion-nav-view>
+      </ion-tab>
+
+	  
+
+      <ion-tab title="About" icon="ion-android-happy" href="#/tab/about">
+        <ion-nav-view name="about-tab"></ion-nav-view>
+      </ion-tab>
+    </ion-tabs>
+  </script>
+
+  <script id="home.html" type="text/ng-template">
+<ion-view title="RESUME AND WORK">
+	  <ion-content class="padding">
+	  
+	<label class="item item-input">
+    <i class="icon ion-search placeholder-icon"></i>
+    <input type="number" placeholder="ID CV" id="ide"/>
+  </label>
+  <div class="button-bar">
+  <a class="button button-calm" onclick="Getcv(document.getElementById('ide').value)">Search <i class="icon ion-search"></i></a>
+  <a class="button button-calm" onclick="GetAllCvs()"> ALL   <i class="icon ion-loop"></i></a>
+</div>
+  
+  <div id="container">
+  <h2 class="title" id="message" style=" margin-top:20%;text-align: center;"><i class="icon ion-android-happy"></i></h2>
+  <h2 class="title" id="message" style="text-align: center;">CLICK ON ALL</h2>
+  <h2 class="title" id="message" style="    text-align: center;">TO GET ALL RESUMES</h2>
+  <h2 class="title" id="message" style="    text-align: center;">OR SEARCH FOR</h2>
+  <h2 class="title" id="message" style="    text-align: center;"> ONE RESUME USING HIS ID</h2>
+
+	</div>
+      </ion-content>
+
+    </ion-view>
+	
+  </script>
+  <script id="about.html" type="text/ng-template">
+    <ion-view title="About">
+      <ion-content class="padding">
+
+  <h2 class="title" id="message" style=" margin-top:20%; text-align: center;">APP DEVELOPED BY </h2>
+  <h2 class="title" id="message" style="    text-align: center;">RAHIL YANIS</h2>
+  <h2 class="title" id="message" style="    text-align: center;">WITH</h2>
+  <h2 class="title" id="message" style="    text-align: center;"> IONIC/DOM/JAVASCRIPT/REST</h2>
+  <h2 class="title" id="message" style="    text-align: center;"> COMPATIBLE</h2>
+  <h2 class="title" id="message" style="    text-align: center;"> ANDROID & IOS</h2>
+  <h2 class="title" id="message" style="    text-align: center;"> Mr Youen Chéné</h2>
+
+
+      </ion-content>
+    </ion-view>
+  </script>
+
+
+  
+
+  <script id="addresume.html" type="text/ng-template">
+    <ion-view title="ADD RESUME">
+      <ion-content class="padding">
+
+	   <div class="list">
+  <div class="item item-divider">
+   Informations Personnelles 
+  </div>
+  <a class="item item-icon-left" href="#">
+    <i class="icon ion-person"></i>
+      <label class="item item-input">
+    <input type="text" placeholder="Nom" id="nom">
+  </label>
+  </a>
+
+  <a class="item item-icon-left " href="#">
+    <i class="icon ion-person"></i>
+      <label class="item item-input">
+    <input type="text" placeholder="Prenom" id="prenom">
+  </label>
+  </a>
+  <a class="item item-icon-left" href="#">
+    <i class="icon ion-person"></i>
+  <label class="item item-input">
+    <input type="text" placeholder="Objectif" id="objectif">
+  </label>
+  </a>
+  <div class="item item-divider">
+   Scolarité  
+  </div>
+  <a class="item item-icon-left">
+    <i class="icon ion-university"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ScolT1">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description" id="ScolD1">
+  </label>
+  </a>
+  <a class="item item-icon-left">
+    <i class="icon ion-university"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ScolT2">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description"  id="ScolD2">
+  </label>
+  </a>
+  <a class="item item-icon-left">
+    <i class="icon ion-university"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ScolT3">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description"  id="ScolD3">
+  </label>
+  </a>
+
+
+<div class="item item-divider">
+   Experience Professionelle 
+  </div>
+
+  <a class="item item-icon-left">
+    <i class="icon ion-briefcase"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre"  id="ExpT1">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description"  id="ExpD1">
+  </label>
+  </a>
+  <a class="item item-icon-left">
+    <i class="icon ion-briefcase"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre"  id="ExpT2">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description"  id="ExpD2">
+  </label>
+  </a>
+  <a class="item item-icon-left">
+    <i class="icon ion-briefcase"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre"  id="ExpT3">
+  </label>
+  <label class="item item-input">
+    <input type="text" placeholder="Description"  id="ExpD3">
+  </label>
+  </a>
+  
+
+  <div class="item item-divider">
+   Langues 
+  </div>
+    <a class="item item-icon-left" >
+    <i class="icon ion-android-contacts"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="LanT1">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="LanN1">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-android-contacts"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="LanT2">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="LanN2">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-android-contacts"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="LanT3">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="LanN3">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-android-contacts"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="LanT4">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="LanN4">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-android-contacts"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="LanT5">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="LanN5">
+  </label>
+  </a>
+  
+<div class="item item-divider">
+   Compétences Informatique 
+  </div>
+    <a class="item item-icon-left" >
+    <i class="icon ion-ribbon-a"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ComT1">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="ComN1">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-ribbon-a"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ComT2">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="ComN2">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-ribbon-a"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ComT3">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="ComN3">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-ribbon-a"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ComT4">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="ComN4">
+  </label>
+  </a>
+    <a class="item item-icon-left" >
+    <i class="icon ion-ribbon-a"></i>
+   <label class="item item-input">
+    <input type="text" placeholder="Titre" id="ComT5">
+  </label>
+  <label class="item item-input">
+    <input type="Number" placeholder="Niveau" id="ComN5">
+  </label>
+  </a>
+<button class="button button-block button-assertive" onclick="PostCv();">
+  AJOUTER LE CV     <i class="icon ion-android-add"></i>
+</button>  
+  
+</div>
+
+
+      </ion-content>
+    </ion-view>
+  </script>
+
+</body>
+</html>
